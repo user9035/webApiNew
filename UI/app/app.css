@@ -1,0 +1,24 @@
+body,
+p{
+    margin: 0;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+}
+.wrapper{
+    width: 800px;
+    height: 100%;
+    margin: 0 auto;
+}
+.menu{
+    height: 30px;
+    border-bottom: 3px solid #222222;
+}
+.menu-item{
+    display: inline-block;
+    font-size: 12pt;
+    margin-top: 7px;
+    text-transform: uppercase;
+    padding-right:10px;
+}

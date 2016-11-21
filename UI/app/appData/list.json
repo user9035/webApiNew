@@ -1,0 +1,27 @@
+[
+  {
+    "brand": "BMW",
+    "country": "Germany",
+    "img": "appData/images/bmw-logo.gif"
+  },
+  {
+    "brand": "Ford",
+    "country": "USA",
+    "img": "appData/images/ford-logo.jpg"
+  },
+  {
+    "brand": "Toyota",
+    "country": "Japan",
+    "img": "appData/images/toyota-logo.jpg"
+  },
+  {
+    "brand": "Renault",
+    "country": "France",
+    "img": "appData/images/renault-logo.png"
+  },
+  {
+    "brand": "ZAZ",
+    "country": "Ukraine",
+    "img": "appData/images/zaz-logo.jpg"
+  }
+ ]

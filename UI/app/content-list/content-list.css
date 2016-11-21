@@ -1,0 +1,13 @@
+li{
+    list-style: none;
+}
+
+img{
+    width: 75px;
+    height: 75px;
+}
+.dscr{
+    margin-left: 5px;
+    display: inline-block;
+    height: 100%;
+}

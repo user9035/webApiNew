@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="carApp" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tutorial</title>
+    <link href="app.css" rel="stylesheet">
+    <link href="content-list/content-list.css" rel="stylesheet">
+    <script src="components/angular/angular.js"></script>
+    <script src="components/angular-route/angular-route.js"></script>
+    <script src="components/angular-resource/angular-resource.js"></script>
+    <script src="app.js"></script>
+    <script src="app.config.js"></script>
+    <script src="data-provider/data-provider.module.js"></script>
+    <script src="data-provider/data-provider.service.js"></script>
+    <script src="content-list/contentList.module.js"></script>
+    <script src="content-list/contentList.component.js"></script>
+    <script src="edit-content-list/editContentList.module.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+      <header>
+        <nav class="menu">
+          <a href="#/list" class="menu-item">List</a>
+          <a href="#/edit-list" class="menu-item">Edit list</a>
+        </nav>
+      </header>
+      <div ng-view></div>
+      <footer>
+      </footer>
+    </div>
+</body>
+</html>
