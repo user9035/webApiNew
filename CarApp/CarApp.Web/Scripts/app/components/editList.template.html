@@ -1,0 +1,13 @@
+﻿<a class="btn" href="#/new">Create</a>
+<ul>
+    <li ng-repeat="item in $ctrl.feeds">
+        <div class="item">
+            <p>Feed: {{item.Caption}}</p>
+            <p>Uri: {{item.Link}}</p>
+            <div id="actionContainer">
+                <button id="edit" type="button" formmethod="put" ng-click="$ctrl.edit(item.Id)"><img src="../../../Content/images/edit_icon.png"/></button>
+                <button id="delete" type="button" formmethod="post" ng-click="$ctrl.delete(item.Id)"><img src="../../../Content/images/delete_icon.png"/></button>
+            </div>
+        </div>
+    </li>
+</ul>

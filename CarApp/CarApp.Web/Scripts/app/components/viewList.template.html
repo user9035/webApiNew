@@ -1,0 +1,13 @@
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>UriString</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="item in $ctrl.list">
+        <td>{{item.Caption}}</td>
+        <td>{{item.Link}}</td>
+        <td><button ng-click="$ctrl.view(item.Id)">View</button></td>
+    </tr>
+</table>

@@ -1,0 +1,28 @@
+﻿#actionContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.btn {
+    border: 1px solid darkcyan;
+    color: black;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    margin: 5px 0;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    width: 80px;
+}
+
+.btn:hover {
+    background-color: darkcyan;
+    color: white;
+}
+
+.item {
+    margin: 3px 0; 
+    position: relative;   
+}

@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html ng-app="feedManager" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tutorial</title>
+    @Scripts.Render("~/Scripts/app")
+    @Styles.Render("~/Content/style")
+    @Scripts.Render("~/Scripts/feed-module")
+    @Styles.Render("~/Content/feed-style")
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav class="menu">
+                <a href="#/list" class="menu-item">List</a>
+                <a href="#/edit-list" class="menu-item">Edit list</a>
+            </nav>
+        </header>
+        <div ng-view></div>
+        <footer></footer>
+    </div>
+</body>
+</html>
