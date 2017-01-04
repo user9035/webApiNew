@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Net.Http;
-using Web.Utility.Rss.Core;
+using Web.Utility.FeedParser.Core;
 
-namespace Web.Utility.Rss.Youtube
+namespace Web.Utility.FeedParser.Youtube
 {
     /// <summary>
     /// Provides the functionality to get data from Youtube RSS feeds.
     /// </summary>
-    class YoutubeClient : ApiRssClientBase
+    class YoutubeClient : ApiClient
     {
         private YoutubeParser parser = new YoutubeParser();
 
@@ -58,7 +58,7 @@ namespace Web.Utility.Rss.Youtube
         /// Gets a parser to handle server response.
         /// </summary>
         /// <returns>A parser.</returns>
-        protected override IRssParser GetParser()
+        protected override IFeedParser GetParser()
         {
             return this.parser;
         }

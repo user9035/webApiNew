@@ -1,10 +1,5 @@
-﻿function NewFeedController(feedEditor) {
-    
-}
-
-angular.module('feedManager').component(
+﻿angular.module('feedManager').component(
     'newFeed', {
-        templateUrl: 'Scripts/app/components/newItem.template.html',
-        controller: NewFeedController
+        templateUrl: 'Scripts/app/components/newItem.template.html'
     }
 )

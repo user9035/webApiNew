@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Http;
 using Newtonsoft.Json.Linq;
-using Web.Utility.Rss.Core;
+using Web.Utility.FeedParser.Core;
 
-namespace Web.Utility.Rss.Twitter
+namespace Web.Utility.FeedParser.Twitter
 {
     /// <summary>
     /// Provides the functionality to parse data from Twitter RSS feeds.
     /// </summary>
-    class TwitterParser : RssParserBase<JToken>
+    class TwitterParser : FeedParserBase<JToken>
     {
+        private readonly IHttpContentConverter converter;
+
         /// <summary>
         /// Gets an id.
         /// </summary>
@@ -18,7 +21,7 @@ namespace Web.Utility.Rss.Twitter
         /// <returns>An id.</returns>
         protected override string GetId(JToken container)
         {
-            return container.SelectToken("id_str").Value<string>();
+            return container["id_str"].Value<string>();
         }
 
         /// <summary>
@@ -28,7 +31,7 @@ namespace Web.Utility.Rss.Twitter
         /// <returns>A title.</returns>
         protected override string GetTitle(JToken container)
         {
-            var text = container.SelectToken("text").Value<string>();
+            var text = container["text"].Value<string>();
             if (string.IsNullOrEmpty(text))
                 return base.GetTitle(container);
             return ParserHelper.GetTitleDescription(text).Item1;
@@ -41,7 +44,7 @@ namespace Web.Utility.Rss.Twitter
         /// <returns>A description.</returns>
         protected override string GetDescription(JToken container)
         {
-            var text = container.SelectToken("text").Value<string>();
+            var text = container["text"].Value<string>();
             if (string.IsNullOrEmpty(text))
                 return base.GetDescription(container);
             return ParserHelper.GetTitleDescription(text).Item2;
@@ -54,8 +57,7 @@ namespace Web.Utility.Rss.Twitter
         /// <returns>A publish date.</returns>
         protected override DateTime GetPublishDate(JToken container)
         {
-            var token = container.SelectToken("created_at");
-            var value = token.Value<string>();
+            var value = container["created_at"].Value<string>();
             return DateTime.ParseExact(value, "ddd MMM dd HH:mm:ss +ffff yyyy",
                 new CultureInfo("en-US"));
         }
@@ -71,6 +73,16 @@ namespace Web.Utility.Rss.Twitter
         }
 
         /// <summary>
+        /// Parses the specified HTTP response content.
+        /// </summary>
+        /// <param name="response">An HTTP response content.</param>
+        /// <returns>A list of <see cref="JToken" /></returns>
+        protected override IEnumerable<JToken> GetResponseData(HttpResponseMessage response)
+        {
+            return this.converter.Convert<JArray>(response);
+        }
+
+        /// <summary>
         /// Gets a thumbnail.
         /// </summary>
         /// <param name="container">A data container from RSS feed.</param>
@@ -82,13 +94,20 @@ namespace Web.Utility.Rss.Twitter
         }
 
         /// <summary>
-        /// Parses the specified HTTP response content.
+        /// Initializes a new instance of the <see cref="TwitterParser"/> class.
         /// </summary>
-        /// <param name="httpResponseContent">An HTTP response content.</param>
-        /// <returns>A list of <see cref="JToken" /></returns>
-        protected override IEnumerable<JToken> ParseInternal(string httpResponseContent)
+        internal TwitterParser() : this(new JsonConverter())
         {
-            return JArray.Parse(httpResponseContent);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TwitterParser"/> class.
+        /// </summary>
+        /// <param name="converter">A Json converter.</param>
+        internal TwitterParser(IHttpContentConverter converter)
+        {
+            ExceptionHelper.CheckArgumentNull(converter, nameof(converter));
+            this.converter = converter;
         }
     }
 }

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Net.Http;
 using DotNetOpenAuth.OAuth;
-using Web.Utility.Rss.Core;
+using Web.Utility.FeedParser.Core;
 
-namespace Web.Utility.Rss.Twitter
+namespace Web.Utility.FeedParser.Twitter
 {
     /// <summary>
     /// Provides the functionality to get data from Twitter.
     /// </summary>
-    class TwitterClient : ApiRssClientBase
+    class TwitterClient : ApiClient
     {
         /// <summary>
         /// Adds the authorization header to the passed request message.
@@ -53,7 +53,7 @@ namespace Web.Utility.Rss.Twitter
         /// Gets a parser to handle server response.
         /// </summary>
         /// <returns>A parser.</returns>
-        protected override IRssParser GetParser()
+        protected override IFeedParser GetParser()
         {
             return new TwitterParser();
         }

@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using Newtonsoft.Json.Linq;
-using Web.Utility.Rss.Core;
+using Web.Utility.FeedParser.Core;
 
-namespace Web.Utility.Rss.Youtube
+namespace Web.Utility.FeedParser.Youtube
 {
     /// <summary>
     /// Provides the functionality to parse response from Youtube RSS feeds.
     /// </summary>
-    class YoutubeParser : RssParserBase<JToken>
+    class YoutubeParser : FeedParserBase<JToken>
     {
+        private readonly IHttpContentConverter converter;
+
         /// <summary>
         /// Gets a description.
         /// </summary>
@@ -79,14 +82,9 @@ namespace Web.Utility.Rss.Youtube
             return token.SelectToken("snippet.title").Value<string>();
         }
 
-        /// <summary>
-        /// Parses the specified HTTP response content.
-        /// </summary>
-        /// <param name="httpResponseContent">An HTTP response content.</param>
-        /// <returns>A list of <see cref="JObject" /></returns>
-        protected override IEnumerable<JToken> ParseInternal(string httpResponseContent)
+        protected override IEnumerable<JToken> GetResponseData(HttpResponseMessage response)
         {
-            return JObject.Parse(httpResponseContent)["items"];
+            return this.converter.Convert<JObject>(response)["items"];
         }
 
         /// <summary>
@@ -98,6 +96,23 @@ namespace Web.Utility.Rss.Youtube
         {
             JObject jsonObject = JObject.Parse(httpResponseContent);
             return jsonObject.SelectToken("items[0].contentDetails.relatedPlaylists.uploads").Value<string>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="YoutubeParser"/> class.
+        /// </summary>
+        internal YoutubeParser() : this(new JsonConverter())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="YoutubeParser"/> class.
+        /// </summary>
+        /// <param name="converter">A Json converter.</param>
+        internal YoutubeParser(IHttpContentConverter converter)
+        {
+            ExceptionHelper.CheckArgumentNull(converter, nameof(converter));
+            this.converter = converter;
         }
     }
 }

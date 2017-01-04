@@ -7,8 +7,11 @@ angular.module('feedManager').config(
             template: '<edit-list></edit-list>'
         }).
         when('/new', {
-            template:'<new-feed></new-feed>'
+            template: '<new-feed></new-feed>'
         }).
+        when('/edit/:id/', {
+            template: '<edit-feed></edit-feed>'
+            }).
         otherwise('/list');
     }
 );

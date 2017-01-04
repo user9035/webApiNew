@@ -1,9 +1,9 @@
-﻿namespace Web.Utility.Rss.Facebook
+﻿namespace Web.Utility.FeedParser.Facebook
 {
     /// <summary>
     /// Defines the object types of Facebook post.
     /// </summary>
-    enum PostObjectType : byte
+    internal enum PostObjectType : byte
     {
         Link,
         Offer,

@@ -1,15 +1,25 @@
 ﻿using System;
 using System.Net.Http;
-using Web.Utility.Rss.Core;
+using Web.Utility.FeedParser.Core;
 
-namespace Web.Utility.Rss.Facebook
+namespace Web.Utility.FeedParser.Facebook
 {
     /// <summary>
     /// Provides the functionality to read data from Facebook feed.
     /// </summary>
-    sealed class FacebookClient : ApiRssClientBase, IPhotoUriProvider
+    sealed class FacebookClient : ApiClient, IPhotoUriProvider
     {
-        private FacebookRssParser parser = new FacebookRssParser();
+        private FacebookFeedParser parser;
+
+        private FacebookFeedParser Parser
+        {
+            get
+            {
+                if (this.parser == null)
+                    this.parser = new FacebookFeedParser(this);
+                return parser;
+            }
+        }
 
         /// <summary>
         /// Gets the API URI.
@@ -67,10 +77,9 @@ namespace Web.Utility.Rss.Facebook
         /// Gets an instance of RSS parser to handle a responce from Facebook RSS feed.
         /// </summary>
         /// <returns>An instance of RSS parser.</returns>
-        protected override IRssParser GetParser()
+        protected override IFeedParser GetParser()
         {
-            this.parser.Init(this);
-            return this.parser;
+            return this.Parser;
         }
 
         /// <summary>
@@ -82,8 +91,8 @@ namespace Web.Utility.Rss.Facebook
         {
             var message = new HttpRequestMessage(HttpMethod.Get, this.CreateApiUri(uri.AbsoluteUri, string.Empty));
             this.AddAuthorizationHeader(message);
-            var response = this.GetString(message);
-            var userData = this.parser.ParseUserData(response);
+            var response = this.GetHttpResponseMessage(message);
+            var userData = this.Parser.ParseUserData(response);
             return userData.UserId;
         }
     }

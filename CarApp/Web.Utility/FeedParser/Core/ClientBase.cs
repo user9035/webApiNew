@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using Mikz.Feed.Contracts.Events;
 
-namespace Web.Utility.Rss.Core
+namespace Web.Utility.FeedParser.Core
 {
     /// <summary>
     /// Provides the functionality to read RSS feeds.
     /// </summary>
-    internal abstract class RssClientBase
+    internal abstract class ClientBase : IDisposable
     {
         private HttpClient client;
-        private bool disposed = false;
+        private bool disposed;
 
         /// <summary>
         /// Finilizes managed and unmanaged resources.
@@ -43,23 +44,9 @@ namespace Web.Utility.Rss.Core
             this.disposed = true;
         }
 
-        protected string GetString(HttpRequestMessage message)
+        protected HttpResponseMessage GetHttpResponseMessage(HttpRequestMessage message)
         {
             using (var task = this.client.SendAsync(message))
-            {
-                task.Wait();
-                return task.Result.Content.ReadAsStringAsync().Result;
-            }
-        }
-
-        /// <summary>
-        /// Executes an http request towards the specified URI.
-        /// </summary>
-        /// <param name="uri">A URI.</param>
-        /// <returns>An http response.</returns>
-        protected string GetString(Uri uri)
-        {
-            using (var task = this.client.GetStringAsync(uri))
             {
                 task.Wait();
                 return task.Result;
@@ -81,6 +68,20 @@ namespace Web.Utility.Rss.Core
         }
 
         /// <summary>
+        /// Executes an http request towards the specified URI.
+        /// </summary>
+        /// <param name="uri">A URI.</param>
+        /// <returns>An http response.</returns>
+        protected string GetString(Uri uri)
+        {
+            using (var task = this.client.GetStringAsync(uri))
+            {
+                task.Wait();
+                return task.Result;
+            }
+        }
+
+        /// <summary>
         /// Gets data from the specified RSS feed.
         /// </summary>
         /// <param name="feedUri">A feed to read the data.</param>
@@ -88,21 +89,21 @@ namespace Web.Utility.Rss.Core
         /// <exception cref="ArgumentNullException">if the passed URI is null.</exception>
         public virtual IEnumerable<FeedItemContract> GetData(Uri feedUri)
         {
-            if (feedUri == null)
-                throw new ArgumentNullException(nameof(feedUri));
+            ExceptionHelper.CheckArgumentNull(feedUri, nameof(feedUri));
 
             var message = this.CreateRequest(feedUri);
-            var response = this.GetString(message);
-            var parser = this.GetParser();
+            using (var response = this.client.SendAsync(message).Result)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw new HttpRequestException(response.ReasonPhrase);
 
-            if (parser == null)
-                throw new NullReferenceException("Parser is not initialized.");
-
-            return parser.Parse(response);
+                var parser = this.GetParser();
+                return parser.Parse(response);
+            }
         }
 
         /// <summary>
-        /// Create a new instance of the <see cref="HttpRequestMessage"/> to get data from RSS feed.
+        /// Creates a new instance of the <see cref="HttpRequestMessage"/> to get data from RSS feed.
         /// </summary>
         /// <param name="uri">The <see cref="Uri"/> of RSS feed.</param>
         /// <returns>A new instance of the <see cref="HttpRequestMessage"/></returns>
@@ -112,12 +113,12 @@ namespace Web.Utility.Rss.Core
         /// Gets a parser to handle server response.
         /// </summary>
         /// <returns>A parser.</returns>
-        protected abstract IRssParser GetParser();
+        protected abstract IFeedParser GetParser();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RssClientBase"/>
+        /// Initializes a new instance of the <see cref="ClientBase"/>
         /// </summary>
-        protected RssClientBase() 
+        protected ClientBase() 
         {
             this.client = new HttpClient();
         }

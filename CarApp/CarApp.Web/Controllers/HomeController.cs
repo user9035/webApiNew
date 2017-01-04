@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using CarApp.Web.Models;
 using DAL.Repository;
 using Domain.Interface;
-using Web.Utility.Rss;
+using Web.Utility.FeedParser;
 
 namespace CarApp.Web.Controllers
 {
@@ -24,8 +20,8 @@ namespace CarApp.Web.Controllers
             var feed = this.repository.GetById(id);
             if (feed == null)
                 throw new NullReferenceException();
-            var parser = new FeedParser();
-            var data = parser.ParseFeed(feed.Uri);
+            var parser = new FeedReader();
+            var data = parser.Read(feed.Uri);
             return this.View(data);
         }
 

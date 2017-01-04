@@ -11,13 +11,13 @@
         @foreach (var contract in Model)
         {
         <li>
-            <p><b>Title:</b>@contract.Title</p>
-            <p><b>Description</b>@contract.Description</p>
-            <p><b>Content:</b>@contract.Content</p>
-            <p><b>Item id:</b>@contract.ItemId</p>
-            <p><b>Link:</b>@contract.Link</p>
-            <p><img src="@contract.Thumbnail"/></p>
-            <p>@contract.PublishDate</p>
+            <p><b>Title:</b> @contract.Title</p>
+            <p><b>Description:</b> @contract.Description</p>
+            <p><b>Item id:</b> @contract.ItemId</p>
+            <p><b>Link:</b> @contract.Link</p>
+            <p><b>Content:</b> @contract.Content</p>
+            <p><b>Publish Date:</b> @contract.PublishDate</p>
+            <p><b>Image:</b> <img src="@contract.Thumbnail"/></p>
         </li>
         }
     </ul>

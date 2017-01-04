@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Net.Http;
-using Web.Utility.Rss.Core;
+using Web.Utility.FeedParser.Core;
 
-namespace Web.Utility.Rss.Instagram
+namespace Web.Utility.FeedParser.Instagram
 {
     /// <summary>
     /// Provides the functionality to fetch data from Instagram.
     /// </summary>
-    class InstagramClient : ApiRssClientBase
+    class InstagramClient : ApiClient
     {
-        private InstagramRssParser parser = new InstagramRssParser();
+        private InstagramFeedParser parser = new InstagramFeedParser();
 
         /// <summary>
         /// Create a new instance of the <see cref="HttpRequestMessage"/> to get data from RSS feed.
@@ -45,7 +45,7 @@ namespace Web.Utility.Rss.Instagram
         /// Gets a parser to handle server response.
         /// </summary>
         /// <returns>A parser.</returns>
-        protected override IRssParser GetParser()
+        protected override IFeedParser GetParser()
         {
             return this.parser;
         }

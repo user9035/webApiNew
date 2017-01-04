@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Http;
 using Newtonsoft.Json.Linq;
-using Web.Utility.Rss.Core;
+using Web.Utility.FeedParser.Core;
 
-namespace Web.Utility.Rss.Instagram
+namespace Web.Utility.FeedParser.Instagram
 {
     /// <summary>
-    /// Provides the functionality to parse response from Instagram RSS feeds.
+    /// Provides the functionality to parse responses from Instagram feeds.
     /// </summary>
-    class InstagramRssParser : RssParserBase<JToken>
+    internal class InstagramFeedParser : FeedParserBase<JToken>
     {
+        /// <summary>
+        /// Holds HTTP response converter.
+        /// </summary>
+        private readonly IHttpContentConverter converter;
+
         /// <summary>
         /// Gets a description.
         /// </summary>
@@ -54,7 +60,7 @@ namespace Web.Utility.Rss.Instagram
         /// <returns>A publish date.</returns>
         protected override DateTime GetPublishDate(JToken token)
         {
-            var createdTime = token.SelectToken("created_time");
+            var createdTime = token["created_time"];
             return new DateTime(1970,1,1).AddSeconds(createdTime.Value<double>());
         }
 
@@ -99,11 +105,28 @@ namespace Web.Utility.Rss.Instagram
         /// <summary>
         /// Parses the specified HTTP response content.
         /// </summary>
-        /// <param name="httpResponseContent">An HTTP response content.</param>
+        /// <param name="response">An HTTP response content.</param>
         /// <returns>A list of <see cref="JToken" /></returns>
-        protected override IEnumerable<JToken> ParseInternal(string httpResponseContent)
+        protected override IEnumerable<JToken> GetResponseData(HttpResponseMessage response)
         {
-            return JObject.Parse(httpResponseContent)["data"];
+            return this.converter.Convert<JObject>(response)["data"];
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstagramFeedParser"/>.
+        /// </summary>
+        internal InstagramFeedParser() : this(new JsonConverter())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstagramFeedParser"/> class.
+        /// </summary>
+        /// <param name="converter">A Json converter.</param>
+        internal InstagramFeedParser(IHttpContentConverter converter)
+        {
+            ExceptionHelper.CheckArgumentNull(converter, nameof(converter));
+            this.converter = converter;
         }
     }
 }

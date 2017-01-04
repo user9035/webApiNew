@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -118,6 +118,10 @@
       <HintPath>..\packages\DotNetOpenAuth.OpenIdOAuth.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OpenIdOAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -149,31 +153,49 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FeedItemContract.cs" />
+    <Compile Include="FeedParser\Core\ExceptionHelper.cs" />
+    <Compile Include="FeedParser\Core\HttpHeader.cs" />
+    <Compile Include="FeedParser\Core\IHttpContentConverter.cs" />
+    <Compile Include="FeedParser\Core\JsonConverter.cs" />
+    <Compile Include="FeedParser\Core\MediaType.cs" />
+    <Compile Include="FeedParser\Core\Rss20AtomConverter.cs" />
+    <Compile Include="FeedParser\Core\TextFormat.cs" />
+    <Compile Include="FeedParser\LinkedIn\LinkedinClient.cs" />
+    <Compile Include="FeedParser\LinkedIn\LinkedInParser.cs" />
+    <Compile Include="FeedParser\Pinterest\PinterestClient.cs" />
+    <Compile Include="FeedParser\Pinterest\PinterestParser.cs" />
+    <Compile Include="FeedParser\RSS\Client.cs" />
+    <Compile Include="FeedParser\RSS\FeedParser.cs" />
+    <Compile Include="FeedParser\RSS\SyndicationContentType.cs" />
+    <Compile Include="FeedParser\Tumblr\TumblrClient.cs" />
+    <Compile Include="FeedParser\Tumblr\PostType.cs" />
+    <Compile Include="FeedParser\Tumblr\TumblrParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rss\Core\ApiRssClientBase.cs" />
-    <Compile Include="Rss\Core\ParserHelper.cs" />
-    <Compile Include="Rss\Facebook\FacebookPostData.cs" />
-    <Compile Include="Rss\Facebook\IPhotoUriProvider.cs" />
-    <Compile Include="Rss\Facebook\PostObjectType.cs" />
-    <Compile Include="Rss\Facebook\FacebookClient.cs" />
-    <Compile Include="Rss\Facebook\FacebookRssParser.cs" />
-    <Compile Include="Rss\Facebook\FacebookUserInfo.cs" />
-    <Compile Include="Rss\FeedParser.cs" />
-    <Compile Include="Rss\Instagram\InstagramClient.cs" />
-    <Compile Include="Rss\Instagram\InstagramRssParser.cs" />
-    <Compile Include="Rss\Core\IRssParser.cs" />
-    <Compile Include="Rss\DomainName.cs" />
-    <Compile Include="Rss\Core\RssParserBase.cs" />
-    <Compile Include="Rss\Core\RssClientBase.cs" />
-    <Compile Include="Rss\Twitter\TwitterParser.cs" />
-    <Compile Include="Rss\Twitter\TwitterClient.cs" />
-    <Compile Include="Rss\Youtube\YoutubeParser.cs" />
-    <Compile Include="Rss\Youtube\YoutubeClient.cs" />
+    <Compile Include="FeedParser\Core\ApiClient.cs" />
+    <Compile Include="FeedParser\Core\ParserHelper.cs" />
+    <Compile Include="FeedParser\Facebook\FacebookData.cs" />
+    <Compile Include="FeedParser\Facebook\IPhotoUriProvider.cs" />
+    <Compile Include="FeedParser\Facebook\PostObjectType.cs" />
+    <Compile Include="FeedParser\Facebook\FacebookClient.cs" />
+    <Compile Include="FeedParser\Facebook\FacebookFeedParser.cs" />
+    <Compile Include="FeedParser\Facebook\FacebookUserInfo.cs" />
+    <Compile Include="FeedParser\FeedReader.cs" />
+    <Compile Include="FeedParser\Instagram\InstagramClient.cs" />
+    <Compile Include="FeedParser\Instagram\InstagramFeedParser.cs" />
+    <Compile Include="FeedParser\Core\IFeedParser.cs" />
+    <Compile Include="FeedParser\ClientProvider.cs" />
+    <Compile Include="FeedParser\Core\FeedParserBase.cs" />
+    <Compile Include="FeedParser\Core\ClientBase.cs" />
+    <Compile Include="FeedParser\Twitter\TwitterParser.cs" />
+    <Compile Include="FeedParser\Twitter\TwitterClient.cs" />
+    <Compile Include="FeedParser\Youtube\YoutubeParser.cs" />
+    <Compile Include="FeedParser\Youtube\YoutubeClient.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

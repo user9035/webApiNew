@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web.Utility.Rss.Facebook
+namespace Web.Utility.FeedParser.Core
 {
-    interface IPhotoUriProvider
+    enum TextFormat
     {
-        string GetPhotoUri(long photoId);
+        Html,
+        PlainText
     }
 }

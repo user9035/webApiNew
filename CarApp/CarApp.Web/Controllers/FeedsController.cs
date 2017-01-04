@@ -68,6 +68,14 @@ namespace CarApp.Web.Controllers
             return this.repository.GetAll().Select(x => new RssFeedViewModel(x));
         }
 
+        public RssFeedViewModel GetFeed(int id)
+        {
+            var entity = this.repository.GetById(id);
+            if (entity == null)
+                return null;
+            return new RssFeedViewModel(entity);
+        }
+
         public FeedsController(IFeedRepository repository)
         {
             if (repository == null)

@@ -1,9 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Web.Utility.Rss.Facebook
+namespace Web.Utility.FeedParser.Facebook
 {
-    class FacebookPostData
+    internal class FbRoot
+    {
+        [JsonProperty(PropertyName = "data")]
+        internal IEnumerable<FacebookPostData> Posts
+        {
+            get;
+            set;
+        }
+    }
+
+    internal class FacebookPostData
     {
         [JsonProperty(PropertyName = "created_time")]
         public DateTime Created

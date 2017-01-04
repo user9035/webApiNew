@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace Web.Utility.Rss.Facebook
+namespace Web.Utility.FeedParser.Facebook
 {
-    class FacebookUserInfo
+    internal class FacebookUserInfo
     {
         [JsonProperty(PropertyName = "id")]
         public string UserId

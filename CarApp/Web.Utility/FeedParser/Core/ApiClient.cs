@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Web.Utility.Rss.Core
+namespace Web.Utility.FeedParser.Core
 {
     /// <summary>
     /// Represents base client to work with API of web resource.
     /// </summary>
-    abstract class ApiRssClientBase : RssClientBase
+    abstract class ApiClient : ClientBase
     {
         private Uri api;
 

@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using Mikz.Feed.Contracts.Events;
 
-namespace Web.Utility.Rss.Core
+namespace Web.Utility.FeedParser.Core
 {
     /// <summary>
     ///     Provides base functionality to parse string from RSS feed.
     /// </summary>
     /// <owner>Vladimir Smolenskiy</owner>
     /// <typeparam name="TContainer">The type of data container.</typeparam>
-    internal abstract class RssParserBase<TContainer> : IRssParser where TContainer : class
+    public abstract class FeedParserBase<TContainer> : IFeedParser where TContainer : class
     {
         /// <summary>
         ///     Creates a new instance of <see cref="FeedItemContract" />.
@@ -102,19 +104,20 @@ namespace Web.Utility.Rss.Core
         /// <summary>
         ///     Parses passed string.
         /// </summary>
-        /// <param name="httpResponseContent">An HTTP response content.</param>
+        /// <param name="response">An HTTP response content.</param>
         /// <returns>A list of <see cref="FeedItemContract" /></returns>
-        public IEnumerable<FeedItemContract> Parse(string httpResponseContent)
+        public IEnumerable<FeedItemContract> Parse(HttpResponseMessage response)
         {
-            var data = ParseInternal(httpResponseContent);
+            ExceptionHelper.CheckArgumentNull(response, nameof(response));
+            var data = this.GetResponseData(response);
             return data.Any() ? data.Select(CreateFeedItemContract).ToList() : null;
         }
 
         /// <summary>
-        /// Parses the specified HTTP response content.
+        /// Gets data from the specified HTTP response.
         /// </summary>
-        /// <param name="httpResponseContent">An HTTP response content.</param>
-        /// <returns>A list of <see cref="TContainer" /></returns>
-        protected abstract IEnumerable<TContainer> ParseInternal(string httpResponseContent);
+        /// <param name="response">A HTTP response.</param>
+        /// <returns>Data from the specified HTTP response.</returns>
+        protected abstract IEnumerable<TContainer> GetResponseData(HttpResponseMessage response);
     }
 }

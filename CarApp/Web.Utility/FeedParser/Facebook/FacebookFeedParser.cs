@@ -1,16 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Web.Utility.Rss.Core;
+using System.Net.Http;
+using Web.Utility.FeedParser.Core;
 
-namespace Web.Utility.Rss.Facebook
+namespace Web.Utility.FeedParser.Facebook
 {
     /// <summary>
-    /// Provides the functionality to parse responces from Facebook RSS feed.
+    /// Provides the functionality to parse responces from Facebook feeds.
     /// </summary>
-    sealed class FacebookRssParser : RssParserBase<FacebookPostData>
+    internal sealed class FacebookFeedParser : FeedParserBase<FacebookPostData>
     {
-        private IPhotoUriProvider photoUriProvider;
+        private readonly IHttpContentConverter converter;
+        private readonly IPhotoUriProvider photoUriProvider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookFeedParser"/> class.
+        /// </summary>
+        internal FacebookFeedParser(IPhotoUriProvider provider) : this(new JsonConverter(), provider)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookFeedParser"/> class.
+        /// </summary>
+        /// <param name="parser">A JSON parser.</param>
+        internal FacebookFeedParser(IHttpContentConverter parser, IPhotoUriProvider provider)
+        {
+            ExceptionHelper.CheckArgumentNull(parser, nameof(parser));
+            ExceptionHelper.CheckArgumentNull(provider, nameof(provider));
+            this.converter = parser;
+            this.photoUriProvider = provider;
+        }
 
         /// <summary>
         /// Gets a content.
@@ -95,35 +115,24 @@ namespace Web.Utility.Rss.Facebook
         }
 
         /// <summary>
-        /// Initializes the current instance.
+        /// Parses the specified HTTP response content.
         /// </summary>
-        /// <param name="provider">A helper to get photo URI.</param>
-        internal void Init(IPhotoUriProvider provider)
+        /// <param name="response">An HTTP response content.</param>
+        /// <returns>A list of <see cref="FacebookPostData" /></returns>
+        protected override IEnumerable<FacebookPostData> GetResponseData(HttpResponseMessage response)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
-            this.photoUriProvider = provider;
-        }
-
-        /// <summary>
-        /// Parses the passed response from Facebook RSS feed.
-        /// </summary>
-        /// <param name="httpResponseContent">An HTTP response content from Facebook RSS feed.</param>
-        /// <returns>A list filled in by Facebook post data.</returns>
-        protected override IEnumerable<FacebookPostData> ParseInternal(string httpResponseContent)
-        {
-            var data = JsonConvert.DeserializeObject<FbRoot>(httpResponseContent);
-            return data.Posts;
+            var fbObject = this.converter.Convert<FbRoot>(response);
+            return fbObject.Posts;
         }
 
         /// <summary>
         /// Parses json with user info.
         /// </summary>
-        /// <param name="responce">A HTTP response.</param>
+        /// <param name="response">A HTTP response.</param>
         /// <returns>A user info.</returns>
-        internal FacebookUserInfo ParseUserData(string responce)
+        internal FacebookUserInfo ParseUserData(HttpResponseMessage response)
         {
-            return JsonConvert.DeserializeObject<FacebookUserInfo>(responce);
+            return this.converter.Convert<FacebookUserInfo>(response);
         }
 
         /// <summary>
@@ -136,16 +145,6 @@ namespace Web.Utility.Rss.Facebook
             if (string.IsNullOrEmpty(message))
                 return null;
             return ParserHelper.GetTitleDescription(message);
-        }
-    }
-
-    class FbRoot
-    {
-        [JsonProperty(PropertyName = "data")]
-        internal IEnumerable<FacebookPostData> Posts
-        {
-            get;
-            set;
         }
     }
 }
